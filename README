@@ -1,1 +1,13 @@
-hello world
+
+Bước 1:tạo đường dẫn lưu trữ data (data trong quá trình sử dụng được lưu trữ ở dir data):
+	sudo mkdir /data
+	sudo chmod 777 /data
+Bước 2: chạy database:	
+	vào dir bigset, chạy command: ./bsgdataservice_map nozk
+	vào dir sesion, chạy command: ./simplesessionserver nozk
+bước 3: chạy server:
+	cd server
+	go run main.go pooldb.go
+bước 4: chạy client:
+	cd client
+	go run main.go menu.go

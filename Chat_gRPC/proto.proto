@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+message Empty{
+}
+//login
+message UserLogin{
+    string username = 1;
+    string password =2;
+}
+message User{
+    uint64 uid=1;//key
+    string username =2;
+    string password =3;
+    string phone =4;
+    string email=5;
+    string createdTime=6;
+    bool active=7;
+}
+//
+message Response{
+    string response=1;
+    bool check =2;
+    string id=3;
+}
+//
+message Request{
+    string sessionkey =1;
+    string request =2;
+    string id=3;
+}
+
+//
+message Message{
+    uint64 mid=1;
+    string sessionkey =2;
+    string cid=3;
+    string content=5;
+    string createdTime=4;
+    bool check=6;
+    string from_name =7;
+    string toUid=8;
+}
+//tra ve cho client khi client chua co
+message Conversation{
+    string cid=1;
+    string ConversationName =2;
+    string LastedTime=4;//lan cuoi cung nhan tin
+    string sessionkey =5;
+}
+message AllConversation{
+    repeated Conversation listConversation=1;
+}
+//tin nhan chua duoc nhan
+message WaittingMessage{
+    repeated Message waittingmess =1;
+  //  bool checknil=2;
+}
+//tat ca tin nhan
+message AllMessages{
+    repeated Message allmess =1;
+}
+//tra ve tat ca User theo dieu kien
+message AllInfoUser{
+    repeated User alluser =1;
+}
+
+message ConversationDetail{
+   string sessionkey=3;
+   string cid=1;
+   repeated string uid=2;
+}
+
+service ChatgRPC {
+    //rpc LoadMess(Request) returns(WaittingMessage){}
+//dieu huong chat
+    rpc RouteChat(stream Message) returns (stream Message){}
+//dang ki thanh vien
+    rpc Register(User) returns (Response) {}
+//dang nhap
+    rpc Login(UserLogin) returns (Response) {}
+//logout
+    rpc Logout(Request) returns (Response){}
+//kiem tra co user tren database hay ko, truyen vao la 1 sessionkey
+    rpc CheckUser(Request) returns (Response){}
+//load tin nhan chua duoc nhan, truyen vao la 1 sessionkey
+    rpc LoadMess(Request) returns(WaittingMessage){}
+//return uid
+    rpc GetId(Request) returns (Response){}
+//tra ve cid
+    rpc CreateConversation(Request) returns(Response){}
+//dau vao la uid tra ve danh sach Conversation
+    rpc GetAllConversation(Request) returns(AllConversation){}
+//add n uid to conversation
+    rpc AddUidToConversation(ConversationDetail) returns(Response){}
+//load tat ca tin nhan
+    rpc LoadAllMess(Request) returns (AllMessages){}
+//ket ban
+    rpc AddFriend(Request) returns (Response){}
+//lay danh sach tat ca user
+    rpc GetListUser(Request) returns (AllInfoUser){}
+//lay danh sach ban be
+    rpc GetListFriend(Request) returns (AllInfoUser){}
+//lay thong tin 1 user
+    rpc GetInfoUser(Request) returns(User){}
+
+}
